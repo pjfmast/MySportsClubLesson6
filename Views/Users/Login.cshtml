@@ -1,0 +1,35 @@
+﻿@model MvcSportsClub.ViewModel.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+<!--todo lesson 4-13: Login view:  -->
+
+    <div class="container">
+    <div class="bg-primary m-1 p-1 text-white"><h4>Login</h4></div>
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <form asp-action="login" method="post">
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input class="form-control" asp-for="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input class="form-control" asp-for="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+
+        <button class="btn btn-primary" type="submit">Login</button>
+
+        <!--todo lesson 5-04a: maak navigatie links aan om in te loggen met Google authentication -->
+        <a class="btn btn-info" asp-action="GoogleLogin" asp-route-returnUrl="@ViewBag.returnUrl">Google Login</a>
+
+    </form>
+</div>
+    
+
