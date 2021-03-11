@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MvcSportsClub.Data;
 using MvcSportsClub.Models;
+using MySportsClubLesson6.Models;
 
 namespace MvcSportsClub {
     public class Startup {
@@ -75,6 +76,8 @@ namespace MvcSportsClub {
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
 
                 });
+
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
         }
 
 
