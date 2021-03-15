@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcSportsClub.Data;
 using MvcSportsClub.Models;
+using MySportsClubLesson6.Models;
+using MySportsClubLesson6.Services;
 
 namespace MvcSportsClub.Controllers
 {
@@ -15,12 +17,16 @@ namespace MvcSportsClub.Controllers
     // Here: only allow access to any authenticated user
     [Authorize]
     public class WorkoutsController : Controller {
-        private readonly IWorkoutRepository repository;
+        private readonly IWorkoutRepository workoutRepository;
+        private readonly IMemberRepository memberRepository;
+        private readonly IMailService mailService;
 
         // Indien de IWorkoutrepository niet ConfigureServices geregistreerd:
         // InvalidOperationException: Unable to resolve service for type 'MvcSportsClub.Models.IWorkoutRepository' while attempting to activate 'MvcSportsClub.Controllers.WorkoutsController'.
-        public WorkoutsController(IWorkoutRepository repository) {
-            this.repository = repository;
+        public WorkoutsController(IWorkoutRepository workoutRepository, IMemberRepository memberRepository, IMailService mailService) {
+            this.workoutRepository = workoutRepository;
+            this.memberRepository = memberRepository;
+            this.mailService = mailService;
         }
 
         // GET: Workouts
@@ -28,7 +34,7 @@ namespace MvcSportsClub.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index() {
             var user = HttpContext.User;
-            return View(await repository.FindAllAsync());
+            return View(await workoutRepository.FindAllAsync());
         }
 
 
@@ -38,7 +44,7 @@ namespace MvcSportsClub.Controllers
                 return NotFound();
             }
 
-            var workout = await repository.FindAsync(id.Value);
+            var workout = await workoutRepository.FindAsync(id.Value);
             if (workout == null) {
                 return NotFound();
             }
@@ -58,7 +64,7 @@ namespace MvcSportsClub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Title,Location,StartTime,EndTime")] Workout workout) {
             if (ModelState.IsValid) {
-                await repository.InsertAsync(workout);
+                await workoutRepository.InsertAsync(workout);
                 return RedirectToAction(nameof(Index));
             }
             return View(workout);
@@ -70,7 +76,7 @@ namespace MvcSportsClub.Controllers
                 return NotFound();
             }
 
-            var workout = await repository.FindAsync(id.Value);
+            var workout = await workoutRepository.FindAsync(id.Value);
             if (workout == null) {
                 return NotFound();
             }
@@ -88,7 +94,7 @@ namespace MvcSportsClub.Controllers
             }
 
             if (ModelState.IsValid) {
-                await repository.UpdateAsync(workout);
+                await workoutRepository.UpdateAsync(workout);
                 return RedirectToAction(nameof(Index));
             }
             return View(workout);
@@ -100,7 +106,7 @@ namespace MvcSportsClub.Controllers
                 return NotFound();
             }
 
-            Workout workout = await repository.FindAsync(id.Value);
+            Workout workout = await workoutRepository.FindAsync(id.Value);
             if (workout == null) {
                 return NotFound();
             }
@@ -113,13 +119,36 @@ namespace MvcSportsClub.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id) {
-            Workout workout = await repository.FindAsync(id);
-            await repository.DeleteAsync(workout);
+            Workout workout = await workoutRepository.FindAsync(id);
+            await workoutRepository.DeleteAsync(workout);
+            await notifyMembersDeletedWorkout(workout);
             return RedirectToAction(nameof(Index));
         }
 
+        private async Task notifyMembersDeletedWorkout(Workout workout) {
+            var members = await memberRepository.FindAllAsync();
+
+            foreach (var member in members) {
+                MailRequest mailRequest = new MailRequest() {
+                    ToEmail = member.Email,
+                    Subject = $"workout {workout.Title} cancelled",
+                    Body = $"Hi {member.Name}, \nthe workout {workout.Title} at {workout.StartTime} has been cancelled."
+                };
+                await mailService.SendMailAsync(mailRequest);
+            }
+
+            //MailRequest mailRequest = new MailRequest() {
+            //    ToEmail = "pjfmast@gmail.com",
+            //    Subject = $"workout {workout.Title} cancelled",
+            //    Body = $"Hi, \nthe workout {workout.Title} at {workout.StartTime} has been cancelled."
+            //};
+            //await mailService.SendMailAsync(mailRequest);
+
+  
+        }
+
         private async Task<bool> WorkoutExists(int id) {
-            Workout workout = await repository.FindAsync(id);
+            Workout workout = await workoutRepository.FindAsync(id);
             return workout != null;
         }
     }

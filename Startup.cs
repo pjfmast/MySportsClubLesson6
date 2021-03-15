@@ -1,3 +1,4 @@
+using MailKit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using MvcSportsClub.Data;
 using MvcSportsClub.Models;
 using MySportsClubLesson6.Models;
+using MySportsClubLesson6.Services;
 
 namespace MvcSportsClub {
     public class Startup {
@@ -78,6 +80,7 @@ namespace MvcSportsClub {
                 });
 
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddTransient<MySportsClubLesson6.Services.IMailService, MySportsClubLesson6.Services.MailService>();
         }
 
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MailKit;
+using Microsoft.EntityFrameworkCore;
 using MvcSportsClub.Models;
 using System;
 using System.Collections.Generic;

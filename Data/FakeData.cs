@@ -11,15 +11,15 @@ namespace MvcSportsClub.Data {
        
         public static List<Member> FakeMembers
             = new List<Member> {
-                new Member{ID= 1, Name = "Esther", StartMembership = new DateTime(2014, 10, 8)},
-                new Member{ID= 2, Name = "Anton", StartMembership = new DateTime(2018, 1, 5)},
-                new Member{ID= 3, Name = "Manon", StartMembership = new DateTime(2016, 6, 1)},
-                new Member{ID= 4, Name = "Joke", StartMembership = new DateTime(2019, 1, 10)},
-                new Member{ID= 5, Name = "Jeroen", StartMembership = new DateTime(2020, 1, 15)},
-                new Member{ID= 6, Name = "Ellen", StartMembership = new DateTime(2010, 5, 8)},
-                new Member{ID= 7, Name = "Eva", StartMembership = new DateTime(2012, 9, 1)},
-                new Member{ID= 8, Name = "Anke", StartMembership = new DateTime(2015, 12, 10)},
-                new Member{ID= 9, Name = "Koen", StartMembership = new DateTime(2015, 4, 16)},
+                new Member{ID= 1, Name = "Esther", Email = "esther@gmail.com", StartMembership = new DateTime(2014, 10, 8)},
+                new Member{ID= 2, Name = "Anton", Email = "anton@gmail.com", StartMembership = new DateTime(2018, 1, 5)},
+                new Member{ID= 3, Name = "Manon", Email = "manon@avans.com", StartMembership = new DateTime(2016, 6, 1)},
+                new Member{ID= 4, Name = "Joke", Email = "joke@avd.com", StartMembership = new DateTime(2019, 1, 10)},
+                new Member{ID= 5, Name = "Jeroen", Email = "jeroen@gmail.com", StartMembership = new DateTime(2020, 1, 15)},
+                new Member{ID= 6, Name = "Ellen", Email = "ellen@breda.nl", StartMembership = new DateTime(2010, 5, 8)},
+                new Member{ID= 7, Name = "Eva", Email = "eva@edu.org", StartMembership = new DateTime(2012, 9, 1)},
+                new Member{ID= 8, Name = "Anke", Email = "anke@bandw.com", StartMembership = new DateTime(2015, 12, 10)},
+                new Member{ID= 9, Name = "Koen", Email = "koen@gmail.com", StartMembership = new DateTime(2015, 4, 16)},
             };
 
         private static DateTime today = DateTime.Now;
