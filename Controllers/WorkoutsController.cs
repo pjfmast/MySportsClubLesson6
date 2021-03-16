@@ -21,9 +21,11 @@ namespace MvcSportsClub.Controllers
         private readonly IMemberRepository memberRepository;
         private readonly IMailService mailService;
 
-        // Indien de IWorkoutrepository niet ConfigureServices geregistreerd:
-        // InvalidOperationException: Unable to resolve service for type 'MvcSportsClub.Models.IWorkoutRepository' while attempting to activate 'MvcSportsClub.Controllers.WorkoutsController'.
-        public WorkoutsController(IWorkoutRepository workoutRepository, IMemberRepository memberRepository, IMailService mailService) {
+        // todo lesson 6-07 use constructor dependency injection for IMailService
+        public WorkoutsController(
+            IWorkoutRepository workoutRepository, 
+            IMemberRepository memberRepository, 
+            IMailService mailService) {
             this.workoutRepository = workoutRepository;
             this.memberRepository = memberRepository;
             this.mailService = mailService;
@@ -121,18 +123,22 @@ namespace MvcSportsClub.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id) {
             Workout workout = await workoutRepository.FindAsync(id);
             await workoutRepository.DeleteAsync(workout);
+
+            // todo lesson 6-08 notify members when a workout is cancelled (deleted)
             await notifyMembersDeletedWorkout(workout);
             return RedirectToAction(nameof(Index));
         }
 
+        // todo lesson 6-09 use the MailService to send a mail to all members that the workout is cancelled
         private async Task notifyMembersDeletedWorkout(Workout workout) {
             var members = await memberRepository.FindAllAsync();
+
 
             foreach (var member in members) {
                 MailRequest mailRequest = new MailRequest() {
                     ToEmail = member.Email,
                     Subject = $"workout {workout.Title} cancelled",
-                    Body = $"Hi {member.Name}, \nthe workout {workout.Title} at {workout.StartTime} has been cancelled."
+                    Body = $@"Hi {member.Name}, the workout {workout.Title} at {workout.StartTime} has been cancelled."
                 };
                 await mailService.SendMailAsync(mailRequest);
             }

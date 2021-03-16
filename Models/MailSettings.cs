@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace MySportsClubLesson6.Models {
+
+    // todo lesson 6-05: model the SMTP server data 
     public class MailSettings {
         public string Mail { get; set; }
         public string DisplayName { get; set; }

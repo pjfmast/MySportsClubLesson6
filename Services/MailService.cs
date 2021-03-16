@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace MySportsClubLesson6.Services {
+    // todo lesson 6-07b: IMailService implementatie
     public class MailService : IMailService {
         private readonly MailSettings _mailSettings;
 
@@ -18,11 +19,16 @@ namespace MySportsClubLesson6.Services {
         }
 
         public async Task SendMailAsync(MailRequest mailRequest) {
+            // todo: construct email
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
             email.Subject = mailRequest.Subject;
+
             var builder = new BodyBuilder();
+            builder.HtmlBody = mailRequest.Body;
+            
+            // todo: add optional attachments 
             if (mailRequest.Attachments != null) {
                 byte[] fileBytes;
                 foreach (var file in mailRequest.Attachments) {
@@ -35,13 +41,14 @@ namespace MySportsClubLesson6.Services {
                     }
                 }
             }
-            builder.HtmlBody = mailRequest.Body;
             email.Body = builder.ToMessageBody();
-            using var smtp = new SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
+
+            // todo use SmtpClient for sending the constructed email
+            using var smtpClient = new SmtpClient();
+            smtpClient.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+            smtpClient.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+            await smtpClient.SendAsync(email);
+            smtpClient.Disconnect(true);
         }
     }
 }

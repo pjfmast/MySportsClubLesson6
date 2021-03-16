@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace MySportsClubLesson6.Models {
+    // todo lesson 6-02: data voor een MailRequest
     public class MailRequest {
         public string ToEmail { get; set; }
         public string Subject { get; set; }
