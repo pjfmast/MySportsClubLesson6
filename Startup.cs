@@ -81,11 +81,14 @@ namespace MvcSportsClub {
 
             // todo lesson 6-01: install using NuGet manager: MailKit en MimeKit packages
             // todo lesson 6-03: create an Ethereal Account aan (https://ethereal.email/) and
+
             // todo lesson 6-04: use Manage User Secrets (preferred instead of AppSettings.json) for SMTP server data 
+            // zie ook https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows#json-structure-flattening-in-visual-studio
 
             // todo lesson 6-06: Configure services for using dependency injection on IMailService
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            services.AddTransient<MySportsClubLesson6.Services.IMailService, MySportsClubLesson6.Services.MailService>();
+            services.AddTransient<MySportsClubLesson6.Services.IMailService,
+                                  MySportsClubLesson6.Services.MailService>();
         }
 
 

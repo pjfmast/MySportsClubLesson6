@@ -131,24 +131,27 @@ namespace MvcSportsClub.Controllers
 
         // todo lesson 6-09 use the MailService to send a mail to all members that the workout is cancelled
         private async Task notifyMembersDeletedWorkout(Workout workout) {
-            var members = await memberRepository.FindAllAsync();
 
+            //MailRequest mailRequest = new MailRequest() {
+            //    ToEmail = "pjfmast@gmail.com",
+            //    Subject = $"workout {workout.Title} cancelled",
+            //    Body = $"Hi, the workout {workout.Title} at {workout.StartTime} has been cancelled."
+            //};
+            //await mailService.SendMailAsync(mailRequest);
+
+            // notify al members of cancelled workout:
+            var members = await memberRepository.FindAllAsync();
 
             foreach (var member in members) {
                 MailRequest mailRequest = new MailRequest() {
                     ToEmail = member.Email,
                     Subject = $"workout {workout.Title} cancelled",
-                    Body = $@"Hi {member.Name}, the workout {workout.Title} at {workout.StartTime} has been cancelled."
+                    Body = $"Hi {member.Name}, the workout {workout.Title} at {workout.StartTime} has been cancelled."
                 };
                 await mailService.SendMailAsync(mailRequest);
             }
 
-            //MailRequest mailRequest = new MailRequest() {
-            //    ToEmail = "pjfmast@gmail.com",
-            //    Subject = $"workout {workout.Title} cancelled",
-            //    Body = $"Hi, \nthe workout {workout.Title} at {workout.StartTime} has been cancelled."
-            //};
-            //await mailService.SendMailAsync(mailRequest);
+            
 
   
         }
